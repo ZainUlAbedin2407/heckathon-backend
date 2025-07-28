@@ -11,7 +11,7 @@ const verifyEmailLimiter = createRateLimiter(
   "Too many email verification attempts."
 );
 
-router.post("/", verifyEmailLimiter, verifyEmail);
+router.post("/", verifyEmail);
 router.post("/resend", verifyEmailLimiter, resendCode);
 
 export default router;
