@@ -49,10 +49,11 @@ const connect = async () => {
   }
 };
 
+connect();
+
 const PORT = process.env.PORT;
 if (process.env.NODE_ENV !== "production") {
   app.listen(PORT, () => {
-    connect();
     console.log("Server is running on port", PORT);
   });
 }
