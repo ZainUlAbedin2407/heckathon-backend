@@ -6,7 +6,7 @@ import helmet from "helmet";
 // import mongoSanitize from "express-mongo-sanitize"
 import hpp from "hpp";
 
-import { connectDB } from "./connectDb/connectdb.js";
+import { connectDB } from "./connectDb/connectDb.js";
 import { errorHandler } from "./middlewares/errorHandler.js";
 
 import verifyRoute from "./routes/verify.route.js";
