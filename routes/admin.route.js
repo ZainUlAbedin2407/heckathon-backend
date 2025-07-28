@@ -4,6 +4,6 @@ import { verifyAdmin } from "../middlewares/jwt.js";
 
 const router = express.Router();
 
-router.get("/admin-dashboard", verifyAdmin, adminDashboard);
+router.get("/admin-dashboard", adminDashboard);
 
 export default router;
