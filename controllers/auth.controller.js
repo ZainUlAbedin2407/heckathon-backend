@@ -5,12 +5,10 @@ import jwt from "jsonwebtoken";
 import { createError } from "../utils/createError.js";
 import { successHandler } from "../middlewares/successHandler.js";
 import { sendEmail } from "../utils/sendEmail.js";
-import { uploadToCloudinary } from "../utils/cloudinary.js";
-import fs from "fs/promises";
+import { uploadToCloudinaryBuffer } from "../utils/cloudinary.js";
 export const register = async (req, res, next) => {
   try {
     const { username, email, password } = req.body;
-    const localFilePath = req.file?.path;
 
     // Basic field check
     if (!username || !email || !password) {
