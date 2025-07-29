@@ -1,6 +1,5 @@
 import express from "express";
 import dotenv from "dotenv";
-import cookieParser from "cookie-parser";
 import cors from "cors";
 import helmet from "helmet";
 // import mongoSanitize from "express-mongo-sanitize"
@@ -20,7 +19,6 @@ dotenv.config();
 // Middlewares
 app.set('trust proxy', 1);
 app.use(express.json());
-app.use(cookieParser());
 // app.use(cors());
 // {
 //     origin: "http://localhost:5173",

@@ -144,14 +144,7 @@ export const login = async (req, res, next) => {
 
     const { password: _, ...info } = user._doc;
 
-    res.cookie("accessToken", token, {
-      httpOnly: true,
-      sameSite: "None",
-      secure: false,
-      maxAge: 1000 * 60 * 60 * 24 * 7,
-    });
-
-    successHandler(res, 200, "Login successful", info);
+    successHandler(res, 200, "Login successful", { ...info, token });
   } catch (err) {
     next(err);
   }
