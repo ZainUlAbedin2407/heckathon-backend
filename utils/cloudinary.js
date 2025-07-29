@@ -1,6 +1,7 @@
 import dotenv from 'dotenv';
 dotenv.config();
 import { v2 as cloudinary } from "cloudinary";
+import streamifier from "streamifier";
 
 cloudinary.config({
   cloud_name: process.env.CLOUD_NAME,
@@ -8,26 +9,17 @@ cloudinary.config({
   api_secret: process.env.CLOUD_API_SECRET,
 });
 
-export const uploadToCloudinary = async (localFilePath, folder, maxRetries = 3) => {
-  if (!localFilePath) return null;
-
-  let attempt = 0;
-  let lastError;
-
-  while (attempt < maxRetries) {
-    try {
-      const result = await cloudinary.uploader.upload(localFilePath, {
-        resource_type: 'image',
-        folder,
-      });
-      return result;
-    } catch (err) {
-      lastError = err;
-      attempt++;
-    }
-  }
-
-  throw lastError;
+export const uploadToCloudinaryBuffer = (buffer, folder) => {
+  return new Promise((resolve, reject) => {
+    const stream = cloudinary.uploader.upload_stream(
+      { folder, resource_type: "image" },
+      (error, result) => {
+        if (error) return reject(error);
+        resolve(result);
+      }
+    );
+    streamifier.createReadStream(buffer).pipe(stream);
+  });
 };
 
 export default cloudinary;

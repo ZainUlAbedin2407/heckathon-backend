@@ -48,21 +48,18 @@ export const register = async (req, res, next) => {
 
     let avatarUrl = "";
 
-     if (localFilePath) {
+    if (req.file) {
       try {
-        const result = await uploadToCloudinary(localFilePath, 'hackathon/users/profile-pics');
+        const result = await uploadToCloudinaryBuffer(
+          req.file.buffer,
+          "hackathon/users/profile-pics"
+        );
         avatarUrl = result.secure_url;
       } catch (uploadErr) {
         return res.status(500).json({
           success: false,
-          message: 'Image upload failed',
-          tempFilePath: localFilePath,
+          message: "Image upload failed",
           error: uploadErr.message,
-        });
-      } finally {
-        // Always delete temp file
-        fs.unlink(localFilePath, (err) => {
-          if (err) console.error('Temp file delete error:', err.message);
         });
       }
     }
