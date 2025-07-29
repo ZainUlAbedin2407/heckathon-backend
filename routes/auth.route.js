@@ -17,7 +17,7 @@ const forgotLimiter = createRateLimiter(15 * 60 * 1000, 3, "Too many password re
 const resetPasswordLimiter = createRateLimiter(15 * 60 * 1000, 5, "Too many password reset attempts.");
 
 
-router.post("/register",registerLimiter, upload.single('avatar'), register);
+router.post("/register", upload.single('avatar'), register); // later adding registerLimiter
 router.post("/login", loginLimiter,login);
 router.post("/logout", logout);
 router.post("/forgot-password", forgotLimiter,forgotPassword);
