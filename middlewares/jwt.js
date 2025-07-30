@@ -11,8 +11,8 @@ export const verifyToken = (req, res, next) => {
   const token = authHeader.split(" ")[1];
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.userId = decoded.id; // 👈 this must match how you created the token
+    const decoded = jwt.verify(token, process.env.JWT_KEY);
+    req.userId = decoded.id; 
     next();
   } catch (err) {
     return res.status(401).json({ message: "Unauthorized: Invalid token" });

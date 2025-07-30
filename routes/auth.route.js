@@ -11,16 +11,31 @@ import upload from "../middlewares/multer.js";
 
 const router = express.Router();
 
-const registerLimiter = createRateLimiter(15 * 60 * 1000, 5, "Too many registrations, try again later.");
-const loginLimiter = createRateLimiter(15 * 60 * 1000, 5, "Too many login attempts, try again later.");
-const forgotLimiter = createRateLimiter(15 * 60 * 1000, 3, "Too many password reset requests, try again later.");
-const resetPasswordLimiter = createRateLimiter(15 * 60 * 1000, 5, "Too many password reset attempts.");
+const registerLimiter = createRateLimiter(
+  15 * 60 * 1000,
+  5,
+  "Too many registrations, try again later."
+);
+const loginLimiter = createRateLimiter(
+  15 * 60 * 1000,
+  5,
+  "Too many login attempts, try again later."
+);
+const forgotLimiter = createRateLimiter(
+  15 * 60 * 1000,
+  3,
+  "Too many password reset requests, try again later."
+);
+const resetPasswordLimiter = createRateLimiter(
+  15 * 60 * 1000,
+  5,
+  "Too many password reset attempts."
+);
 
-
-router.post("/register", upload.single('avatar'), register); // later adding registerLimiter
-router.post("/login", loginLimiter,login);
+router.post("/register", registerLimiter, upload.single("avatar"), register); // later adding registerLimiter
+router.post("/login", loginLimiter, login);
 router.post("/logout", logout);
-router.post("/forgot-password", forgotLimiter,forgotPassword);
-router.post("/reset-password/:token",resetPasswordLimiter, resetPassword);
+router.post("/forgot-password", forgotLimiter, forgotPassword);
+router.post("/reset-password/:token", resetPasswordLimiter, resetPassword);
 
 export default router;
