@@ -10,11 +10,13 @@ export const verifyToken = (req, res, next) => {
 
   const token = authHeader.split(" ")[1];
 
-  jwt.verify(token, process.env.JWT_KEY, (err, user) => {
-    if (err) return next(createError(403, "Invalid token."));
-    req.user = user; 
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    req.userId = decoded.id; // 👈 this must match how you created the token
     next();
-  });
+  } catch (err) {
+    return res.status(401).json({ message: "Unauthorized: Invalid token" });
+  }
 };
 
 export const verifyAdmin = (req, res, next) => {
