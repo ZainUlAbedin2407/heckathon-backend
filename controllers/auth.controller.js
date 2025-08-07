@@ -8,7 +8,7 @@ import { sendEmail } from "../utils/sendEmail.js";
 import { uploadToCloudinaryBuffer } from "../utils/cloudinary.js";
 export const register = async (req, res, next) => {
   try {
-    const { username, email, password } = req.body;
+    const { username, email, password, ...extraDetails } = req.body;
 
     // Basic field check
     if (!username || !email || !password) {
@@ -27,11 +27,11 @@ export const register = async (req, res, next) => {
     }
 
     // Check for existing email or username
-    const existingUser = await User.findOne({ email });
-    if (existingUser) return next(createError(409, "Email already in use"));
-
     const existingUsername = await User.findOne({ username });
     if (existingUsername) return next(createError(409, "Username is taken"));
+
+    const existingUser = await User.findOne({ email });
+    if (existingUser) return next(createError(409, "Email already in use"));
 
     // Hash password
     const salt = bcrypt.genSaltSync(10);
@@ -70,6 +70,7 @@ export const register = async (req, res, next) => {
       verifyToken: hashedToken,
       verifyTokenExpires: Date.now() + 15 * 60 * 1000, // 15 min
       avatar: avatarUrl,
+      ...extraDetails,
     });
 
     await newUser.save();
