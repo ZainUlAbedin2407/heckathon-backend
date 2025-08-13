@@ -27,35 +27,65 @@ export const getUser = async (req, res, next) => {
 };
 
 export const updateUser = async (req, res, next) => {
+  console.log("updateUser req.params.id:", req.params.id);
+  console.log(
+    "updateUser req.userId:",
+    req.userId,
+    "req.isAdmin:",
+    req.isAdmin
+  );
+  console.log("updateUser body BEFORE conversion:", req.body);
+
   try {
-    const user = await User.findById(req.params.id);
+    const { id } = req.params;
 
-    if (!user) {
-      return next(createError(404, "User not found"));
-    }
+    // Check if user exists
+    const user = await User.findById(id);
+    if (!user) return next(createError(404, "User not found"));
 
-    if (req.userId !== req.params.id && !req.isAdmin) {
+    // Authorization: Only same user or admin can update
+    if (req.userId !== id && !req.isAdmin) {
       return next(createError(403, "You can update only your account"));
     }
 
+    // Prevent non-admin from changing role
+    if ("isAdmin" in req.body && !req.isAdmin) {
+      return next(createError(403, "Only admins can change roles"));
+    }
+
+    // Admin role value conversion (string -> boolean)
+    if (req.isAdmin && typeof req.body.isAdmin === "string") {
+      const val = req.body.isAdmin.toLowerCase();
+      if (val === "true" || val === "admin") {
+        req.body.isAdmin = true;
+      } else if (val === "false" || val === "customer") {
+        req.body.isAdmin = false;
+      } else {
+        // Invalid value safeguard
+        delete req.body.isAdmin;
+      }
+    }
+
+    // Password hashing if updating
     if (req.body.password) {
       const salt = bcrypt.genSaltSync(10);
       req.body.password = bcrypt.hashSync(req.body.password, salt);
     }
 
+    // Update user
     const updatedUser = await User.findByIdAndUpdate(
-      req.params.id,
-      {
-        $set: req.body,
-      },
+      id,
+      { $set: req.body },
       { new: true, runValidators: true }
     ).select("-password");
 
+    // Response
     successHandler(res, 200, "User updated successfully", updatedUser);
   } catch (err) {
     next(err);
   }
 };
+
 
 export const deleteUser = async (req, res, next) => {
   try {

@@ -12,7 +12,8 @@ export const verifyToken = (req, res, next) => {
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_KEY);
-    req.userId = decoded.id; 
+    req.userId = decoded.id;
+    req.isAdmin = decoded.isAdmin;
     next();
   } catch (err) {
     return res.status(401).json({ message: "Unauthorized: Invalid token" });

@@ -128,7 +128,11 @@ export const login = async (req, res, next) => {
     if (!user) return next(createError(404, "User not found"));
 
     if (!user.isVerified) {
-      return next(createError(401, "Please verify your email before login"));
+      return res.status(401).json({
+        success: false,
+        message: "Please verify your email before login",
+        email: user.email, 
+      });
     }
 
     const isCorrect = bcrypt.compareSync(password, user.password);

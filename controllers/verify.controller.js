@@ -62,6 +62,3 @@ export const resendCode = async (req, res, next) => {
     next(err);
   }
 };
-
-
-
