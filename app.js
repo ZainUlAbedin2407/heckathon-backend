@@ -12,6 +12,7 @@ import verifyRoute from "./routes/verify.route.js";
 import authRoute from "./routes/auth.route.js";
 import userRoute from "./routes/user.route.js";
 import adminRoute from "./routes/admin.route.js";
+import medicalReportRoute from "./routes/medicalReport.route.js";
 
 const app = express();
 dotenv.config();
@@ -51,6 +52,7 @@ app.use("/api/auth", authRoute);
 app.use("/api/users", userRoute);
 app.use("/api/admin", adminRoute);
 app.use("/api/verify", verifyRoute);
+app.use("/api/medical-reports", medicalReportRoute);
 
 // Error handler
 app.use(errorHandler);
